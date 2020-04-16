@@ -2,6 +2,7 @@ import 'package:ROSystem/screens/add_category2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AddCategories extends StatefulWidget {
@@ -65,30 +66,55 @@ class _AddCategoriesState extends State<AddCategories> {
                 shrinkWrap: true,
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 20),
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                          width: 70,
-                          height: 70,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.network(
-                              snapshot
-                                  .data.documents[index].data["Category_Icon"],
-                              fit: BoxFit.cover,
+                  return Slidable(
+                    actionPane: SlidableDrawerActionPane(),
+                    secondaryActions: <Widget>[
+                      Container(
+                        height: 110,
+                        width: 60,
+                        margin: EdgeInsets.only(
+                          top: 12,
+                        ),
+                        child: IconSlideAction(
+                          caption: "Delete",
+                          color: Colors.black,
+                          icon: Icons.delete,
+                          onTap: () async {
+                            await Firestore.instance
+                                .collection("Categories")
+                                .document(
+                                    snapshot.data.documents[index].data["id"])
+                                .delete();
+                          },
+                        ),
+                      ),
+                    ],
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 20),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            width: 70,
+                            height: 70,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                snapshot.data.documents[index]
+                                    .data["Category_Icon"],
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          snapshot.data.documents[index].data["Category Name"],
-                          style: TextStyle(color: Colors.black, fontSize: 23),
-                        )
-                      ],
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            snapshot
+                                .data.documents[index].data["Category Name"],
+                            style: TextStyle(color: Colors.black, fontSize: 23),
+                          )
+                        ],
+                      ),
                     ),
                   );
                 },

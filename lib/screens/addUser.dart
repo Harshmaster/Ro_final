@@ -2,6 +2,7 @@ import 'package:ROSystem/screens/addUsers2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AddUsers extends StatefulWidget {
@@ -73,28 +74,51 @@ class _AddUsersState extends State<AddUsers> {
                 shrinkWrap: true,
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
-                  return Card(
-                    margin: EdgeInsets.only(bottom:20),
-                    elevation: 5, 
-                 
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          height: 50,
-                          width: 50,
-                          child: Icon(Icons.person, size: 35),
+                  return Slidable(
+                    actionPane: SlidableDrawerActionPane(),
+                    secondaryActions: <Widget>[
+                      Container(
+                        height: 110,
+                        width: 60,
+                        margin: EdgeInsets.only(
+                          top: 12,
                         ),
-                        Container(
-                          child: Text(
-                            snapshot.data.documents[index].data["Name"],
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
+                        child: IconSlideAction(
+                          caption: "Delete",
+                          color: Colors.black,
+                          icon: Icons.delete,
+                          onTap: () async {
+                            Firestore.instance
+                                .collection("Users")
+                                .document(snapshot
+                                    .data.documents[index].data["Mobile"])
+                                .delete();
+                          },
+                        ),
+                      ),
+                    ],
+                    child: Card(
+                      margin: EdgeInsets.only(bottom: 20),
+                      elevation: 0,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            height: 50,
+                            width: 50,
+                            child: Icon(Icons.person, size: 35),
                           ),
-                        ),
-                      ],
+                          Container(
+                            child: Text(
+                              snapshot.data.documents[index].data["Name"],
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },

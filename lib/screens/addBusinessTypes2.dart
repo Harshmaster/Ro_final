@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:uuid/uuid.dart';
 import '../models/icon-model.dart';
 import './addBusinessType.dart';
 
@@ -55,26 +56,24 @@ class _AddBusinessTypes2State extends State<AddBusinessTypes2> {
   final categoryController = TextEditingController();
 
   void writeData() async {
-    showDialog(
+     showDialog(
         context: context,
         builder: (context) {
           return SpinKitCircle(
             color: Colors.white,
           );
         });
-    await Firestore.instance.collection("Business Types").add({
+
+    var id = Uuid().v4();
+    var ref = Firestore.instance.collection("Business Types");
+    await ref.document(id).setData({
       "BusinessType Name": categoryController.text,
-      "BusinessType_Icon": catImage.imgLink,
-    }).whenComplete(() {
-      print("KEMCHO");
-      categoryController.clear();
-    }).catchError((e) {
-      print(e);
+      "BusinessType_Icon": catImage.imgLink, 
+      "id": id,
     });
 
-    Navigator.of(context).pushNamed(
-      AddBusinessType.routeName,
-    );
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   @override

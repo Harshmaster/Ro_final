@@ -2,6 +2,7 @@ import 'package:ROSystem/screens/add_icons2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class AddIcon extends StatefulWidget {
   static const routeName = '/add-icon';
@@ -64,29 +65,55 @@ class _AddIconState extends State<AddIcon> {
                 shrinkWrap: true,
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 20),
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                          width: 70,
-                          height: 70,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.network(
-                              snapshot.data.documents[index].data["link"],
-                              fit: BoxFit.cover,
+                  return Slidable(
+                     actionPane: SlidableDrawerActionPane(),
+                            secondaryActions: <Widget>[
+                              Container(
+                                height: 110,
+                                width: 60,
+                                margin: EdgeInsets.only(
+                                  top: 12,
+                                ),
+                                child: IconSlideAction(
+                                  caption: "Delete",
+                                  color: Colors.black,
+                                  icon: Icons.delete,
+                                  onTap: () async {
+                                    print("HELLO");
+                                    await Firestore.instance
+                                        .collection("icons")
+                                        .document(snapshot.data.documents[index]
+                                            .data["id"])
+                                        .delete();
+                                          print("AGAIN HELLO");
+                                  },
+                                ),
+                              ),
+                            ],
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 20),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            width: 70,
+                            height: 70,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                snapshot.data.documents[index].data["link"],
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          snapshot.data.documents[index].data["Name"],
-                          style: TextStyle(color: Colors.black, fontSize: 23),
-                        )
-                      ],
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            snapshot.data.documents[index].data["Name"],
+                            style: TextStyle(color: Colors.black, fontSize: 23),
+                          )
+                        ],
+                      ),
                     ),
                   );
                 },

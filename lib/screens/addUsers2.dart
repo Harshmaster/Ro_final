@@ -29,26 +29,19 @@ class _AddUser2State extends State<AddUser2> {
             color: Colors.blue,
           );
         });
-    await Firestore.instance.collection("Users").add({
+        
+    var ref = Firestore.instance.collection("Users");
+    await ref.document(mobileController.text).setData({
       "Name": nameController.text,
       "Mobile": mobileController.text,
       "Monthly Salary": salaryController.text,
       "Monthoff": monthoffController.text,
       "Email": emailController.text,
       "Business Type": businessType.name,
-    }).whenComplete(() {
-      print("KEMCHO");
-      nameController.clear();
-      mobileController.clear();
-      salaryController.clear();
-      monthoffController.clear();
-    }).catchError((e) {
-      print(e);
     });
 
-    Navigator.of(context).pushNamed(
-      AddUsers.routeName,
-    );
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   @override
@@ -349,7 +342,7 @@ class _AddUser2State extends State<AddUser2> {
                             left: 10, right: 10, top: 30, bottom: 20),
                         padding: EdgeInsets.all(8),
                         child: DropdownButton<BType>(
-                          itemHeight: 80, 
+                          itemHeight: 80,
                           isExpanded: true,
                           icon: Icon(Icons.arrow_drop_down),
                           iconSize: 30,

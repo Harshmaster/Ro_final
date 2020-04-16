@@ -2,19 +2,31 @@ import 'package:ROSystem/screens/AddSubCat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SubCategory extends StatefulWidget {
-  static const routeName = '/add-subCategory';  
+  static const routeName = '/add-subCategory';
 
   @override
   _SubCategoryState createState() => _SubCategoryState();
 }
 
 class _SubCategoryState extends State<SubCategory> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: new Text(value),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         child: Icon(
@@ -60,38 +72,89 @@ class _SubCategoryState extends State<SubCategory> {
         width: double.infinity,
         margin: EdgeInsets.all(20),
         child: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection("SUB CATEGORIE").snapshots(),
+          stream: Firestore.instance.collection("sub_cat_info").snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 20),
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                          width: 70,
-                          height: 70,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.network(
-                              snapshot.data.documents[index]
-                                  .data["SUB Category_Icon"],
-                              fit: BoxFit.cover,
+                  List<dynamic> categories =
+                      snapshot.data.documents[index].data["categories"];
+                  String sub_cat_name =
+                      snapshot.data.documents[index].data["sub_category_name"];
+                  var id = snapshot.data.documents[index].documentID;
+                  return Slidable(
+                    actionPane: SlidableDrawerActionPane(),
+                    secondaryActions: <Widget>[
+                      Container(
+                        height: 110,
+                        width: 60,
+                        margin: EdgeInsets.only(
+                          top: 12,
+                        ),
+                        child: IconSlideAction(
+                          caption: "Delete",
+                          color: Colors.black,
+                          icon: Icons.delete,
+                          onTap: () async {
+                            await Firestore.instance
+                                .collection("sub_cat_info")
+                                .document(id)
+                                .delete();
+
+                            await Firestore.instance
+                                .collection("SUB CATEGORIE")
+                                .where("sub_category_name",
+                                    isEqualTo: sub_cat_name)
+                                .getDocuments()
+                                .then((docs) {
+                              for (int i = 0; i < docs.documents.length; i++) {
+                                var docId = docs.documents[i].documentID;
+                                Firestore.instance
+                                    .collection("SUB CATEGORIE")
+                                    .document(docId)
+                                    .delete();
+                              }
+                              print("ALL IS DONE NOW");
+                              showInSnackBar("$sub_cat_name DELETED");
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 20),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            width: 70,
+                            height: 70,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                snapshot.data.documents[index]
+                                    .data["sub_category_icon"],
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          snapshot
-                              .data.documents[index].data["SUB Category Name"],
-                          style: TextStyle(color: Colors.black, fontSize: 23),
-                        )
-                      ],
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                snapshot.data.documents[index]
+                                    .data["sub_category_name"],
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 23),
+                              ),
+                              CategoryChip(categories),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -104,6 +167,38 @@ class _SubCategoryState extends State<SubCategory> {
           },
         ),
       ),
+    );
+  }
+}
+
+class CategoryChip extends StatefulWidget {
+  final List<dynamic> reportList;
+  CategoryChip(this.reportList);
+  @override
+  _CategoryChipState createState() => _CategoryChipState();
+}
+
+class _CategoryChipState extends State<CategoryChip> {
+  String selectedChoice = "";
+  // this function will build and return the choice list
+  _buildChoiceList() {
+    List<Widget> choices = List();
+    widget.reportList.forEach((item) {
+      choices.add(Container(
+        padding: const EdgeInsets.all(2.0),
+        child: ChoiceChip(
+          label: Text(item),
+          selected: selectedChoice == item,
+        ),
+      ));
+    });
+    return choices;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      children: _buildChoiceList(),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../models/icon-model.dart';
+import 'package:uuid/uuid.dart';
 
 class AddCategory2 extends StatefulWidget {
   static const routeName = '/add-category2';
@@ -53,16 +54,16 @@ class _AddCategory2State extends State<AddCategory2> {
             color: Colors.white,
           );
         });
-    await Firestore.instance.collection("Categories").add({
+
+    var id = Uuid().v4();
+    var ref = Firestore.instance.collection("Categories");
+    await ref.document(id).setData({
       "Category Name": categoryController.text,
       "Category_Icon": catImage.imgLink,
-    }).whenComplete(() {
-      print("KEMCHO");
-      categoryController.clear();
-    }).catchError((e) {
-      print(e);
+      "id": id,
     });
 
+    Navigator.of(context).pop();
     Navigator.of(context).pop();
   }
 

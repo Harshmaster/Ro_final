@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:uuid/uuid.dart';
 import '../models/icon-model.dart';
 
 class AddSubCat extends StatefulWidget {
@@ -11,6 +12,8 @@ class AddSubCat extends StatefulWidget {
 }
 
 class _AddSubCatState extends State<AddSubCat> {
+  List<String> selectedCategoryList;
+
   List myIconList;
   List<MyIcon> dropList;
   MyIcon catImage;
@@ -72,16 +75,26 @@ class _AddSubCatState extends State<AddSubCat> {
             color: Colors.white,
           );
         });
-    await Firestore.instance.collection("SUB CATEGORIE").add({
-      "SUB Category Name": categoryController.text,
-      "SUB Category_Icon": catImage.imgLink,
-    }).whenComplete(() {
-      print("KEMCHO");
-      categoryController.clear();
-    }).catchError((e) {
-      print(e);
+
+    var ref = Firestore.instance.collection("SUB CATEGORIE");
+    selectedCategoryList.forEach((element) async {
+      print(element);
+      var id = Uuid().v4();
+      await ref.document(id).setData({
+        "category": element,
+        "sub_category_name": categoryController.text,
+        "sub_category_icon": catImage.imgLink,
+        "id": id,
+      });
     });
 
+    await Firestore.instance.collection("sub_cat_info").add({
+      "categories":selectedCategoryList,
+      "sub_category_name": categoryController.text,
+      "sub_category_icon": catImage.imgLink,
+    });
+
+    Navigator.of(context).pop();
     Navigator.of(context).pop();
   }
 
@@ -206,13 +219,16 @@ class _AddSubCatState extends State<AddSubCat> {
                       ),
                       categoryList != null
                           ? Container(
-                              width: 130,
-                              child: Wrap(
-                                  spacing: 5,
-                                  runSpacing: 10,
-                                  children: categoryList.map((variable) {
-                                    return FilterChipWidget(variable);
-                                  }).toList()),
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              width: double.infinity,
+                              child: Center(
+                                  child: MultiSelectChip(categoryList,
+                                      onSelectionChanged: (selectedList) {
+                                setState(() {
+                                  selectedCategoryList = selectedList;
+                                });
+                                print(selectedCategoryList);
+                              })),
                             )
                           : Container(),
                       Expanded(
@@ -259,39 +275,81 @@ class _AddSubCatState extends State<AddSubCat> {
   }
 }
 
-class FilterChipWidget extends StatefulWidget {
-  final String name;
-  FilterChipWidget(this.name);
+// class FilterChipWidget extends StatefulWidget {
+
+//   final String name;
+//   FilterChipWidget(this.name);
+//   @override
+//   _FilterChipWidgetState createState() => _FilterChipWidgetState();
+// }
+
+// class _FilterChipWidgetState extends State<FilterChipWidget> {
+//   var _isSelected = false;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return FilterChip(
+//       label: Text(widget.name),
+//       labelStyle: TextStyle(
+//         fontSize: 17,
+//         color: Colors.white,
+//       ),
+//       selected: _isSelected,
+//       backgroundColor: Colors.black,
+//       onSelected: (isSelected) {
+//         if (isSelected) {
+
+//         } else {
+
+//         }
+//         setState(() {
+//           _isSelected = isSelected;
+//         });
+//       },
+//       selectedColor: Colors.amber,
+//       showCheckmark: false,
+//     );
+//   }
+// }
+
+class MultiSelectChip extends StatefulWidget {
+  final List<String> reportList;
+  final Function(List<String>) onSelectionChanged; // +added
+  MultiSelectChip(this.reportList, {this.onSelectionChanged} // +added
+      );
   @override
-  _FilterChipWidgetState createState() => _FilterChipWidgetState();
+  _MultiSelectChipState createState() => _MultiSelectChipState();
 }
 
-class _FilterChipWidgetState extends State<FilterChipWidget> {
-  var _isSelected = false;
+class _MultiSelectChipState extends State<MultiSelectChip> {
+  // String selectedChoice = "";
+  List<String> selectedChoices = List();
+  _buildChoiceList() {
+    List<Widget> choices = List();
+    widget.reportList.forEach((item) {
+      choices.add(Container(
+        padding: const EdgeInsets.all(2.0),
+        child: ChoiceChip(
+          label: Text(item),
+          selected: selectedChoices.contains(item),
+          onSelected: (selected) {
+            setState(() {
+              selectedChoices.contains(item)
+                  ? selectedChoices.remove(item)
+                  : selectedChoices.add(item);
+              widget.onSelectionChanged(selectedChoices); // +added
+            });
+          },
+        ),
+      ));
+    });
+    return choices;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FilterChip(
-      label: Text(widget.name),
-      labelStyle: TextStyle(
-        fontSize: 17,
-        color: Colors.white,
-      ),
-      selected: _isSelected,
-      backgroundColor: Colors.black,
-      onSelected: (isSelected) {
-        if (isSelected) {
-            
-        } 
-        else {
-
-        }
-        setState(() {
-          _isSelected = isSelected;
-        });
-      },
-      selectedColor: Colors.amber,
-      showCheckmark: false,
+    return Wrap(
+      children: _buildChoiceList(),
     );
   }
 }
