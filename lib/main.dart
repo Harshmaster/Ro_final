@@ -5,6 +5,7 @@ import 'package:ROSystem/screens/addUser.dart';
 import 'package:ROSystem/screens/addUsers2.dart';
 import 'package:ROSystem/screens/add_category.dart';
 import 'package:ROSystem/screens/add_category2.dart';
+import 'package:ROSystem/screens/subCategory.dart';
 import 'package:flutter/material.dart';
 import './screens/home_Categories.dart';
 import './screens/add_icons.dart';
@@ -28,7 +29,8 @@ class MyApp extends StatelessWidget {
         AddUser2.routeName: (ctx) => AddUser2(),
         AddBusinessTypes2.routeName: (ctx) => AddBusinessTypes2(),
         AddBusinessType.routeName: (ctx) => AddBusinessType(),
-        AddSlot.routeName:(ctx) => AddSlot(), 
+        AddSlot.routeName: (ctx) => AddSlot(),
+        SubCategory.routeName: (ctx) => SubCategory(),
       },
       home: MyHomePage(),
       debugShowCheckedModeBanner: false,

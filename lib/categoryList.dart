@@ -2,12 +2,13 @@ import 'package:ROSystem/screens/AddSlot.dart';
 import 'package:ROSystem/screens/addUser.dart';
 import 'package:ROSystem/screens/add_category.dart';
 import 'package:ROSystem/screens/add_icons.dart';
+import 'package:ROSystem/screens/subCategory.dart';
 
 import './models/home_Category_modal.dart';
 
 List<Category> categoryList =[
   Category(
-    title: 'ICON',
+    title: 'ICON', 
     subTitle: 'April , Monday',
     imgLink: 'assets/images/addIcon.png',
     routeAddress: AddIcon.routeName
@@ -23,6 +24,7 @@ List<Category> categoryList =[
     title: 'SUB CAT.',
     subTitle: 'HELLO',
     imgLink: 'assets/images/addSubCategory.jpg',
+    routeAddress: SubCategory.routeName,
   ),
   Category(
     title: 'USER',
