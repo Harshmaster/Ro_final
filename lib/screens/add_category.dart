@@ -13,9 +13,20 @@ class AddCategories extends StatefulWidget {
 }
 
 class _AddCategoriesState extends State<AddCategories> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: new Text(value),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         child: Icon(
@@ -85,6 +96,8 @@ class _AddCategoriesState extends State<AddCategories> {
                                 .document(
                                     snapshot.data.documents[index].data["id"])
                                 .delete();
+                            showInSnackBar(
+                                "${snapshot.data.documents[index].data["Category Name"]} DELETED SUCCESSFULLY");
                           },
                         ),
                       ),

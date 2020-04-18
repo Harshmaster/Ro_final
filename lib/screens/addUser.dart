@@ -13,9 +13,20 @@ class AddUsers extends StatefulWidget {
 }
 
 class _AddUsersState extends State<AddUsers> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: new Text(value),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         child: Icon(
@@ -93,6 +104,8 @@ class _AddUsersState extends State<AddUsers> {
                                 .document(snapshot
                                     .data.documents[index].data["Mobile"])
                                 .delete();
+                            showInSnackBar(
+                                "${snapshot.data.documents[index].data["Name"]} DELETED SUCCESSFULLY");
                           },
                         ),
                       ),

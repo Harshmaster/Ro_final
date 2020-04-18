@@ -1,6 +1,6 @@
 class Category {
-  final String title;
-  final String subTitle;
+  String title;
+  Future<int> subTitle;
   final String imgLink;
   final String routeAddress;
 

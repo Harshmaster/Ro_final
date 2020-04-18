@@ -12,9 +12,20 @@ class AddIcon extends StatefulWidget {
 }
 
 class _AddIconState extends State<AddIcon> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: new Text(value),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         child: Icon(
@@ -66,30 +77,33 @@ class _AddIconState extends State<AddIcon> {
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
                   return Slidable(
-                     actionPane: SlidableDrawerActionPane(),
-                            secondaryActions: <Widget>[
-                              Container(
-                                height: 110,
-                                width: 60,
-                                margin: EdgeInsets.only(
-                                  top: 12,
-                                ),
-                                child: IconSlideAction(
-                                  caption: "Delete",
-                                  color: Colors.black,
-                                  icon: Icons.delete,
-                                  onTap: () async {
-                                    print("HELLO");
-                                    await Firestore.instance
-                                        .collection("icons")
-                                        .document(snapshot.data.documents[index]
-                                            .data["id"])
-                                        .delete();
-                                          print("AGAIN HELLO");
-                                  },
-                                ),
-                              ),
-                            ],
+                    actionPane: SlidableDrawerActionPane(),
+                    secondaryActions: <Widget>[
+                      Container(
+                        height: 110,
+                        width: 60,
+                        margin: EdgeInsets.only(
+                          top: 12,
+                        ),
+                        child: IconSlideAction(
+                          caption: "Delete",
+                          color: Colors.black,
+                          icon: Icons.delete,
+                          onTap: () async {
+                            print("HELLO");
+                            await Firestore.instance
+                                .collection("icons")
+                                .document(
+                                    snapshot.data.documents[index].data["id"])
+                                .delete();
+                            print("AGAIN HELLO");
+
+                            showInSnackBar(
+                                "${snapshot.data.documents[index].data["Name"]} DELETED SUCCESSFULLY");
+                          },
+                        ),
+                      ),
+                    ],
                     child: Container(
                       margin: EdgeInsets.only(bottom: 20),
                       child: Row(

@@ -2,7 +2,6 @@ import 'package:ROSystem/models/bTypeModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import './addUser.dart';
 
 class AddUser2 extends StatefulWidget {
   static const routeName = '/add-user2';
@@ -18,6 +17,7 @@ class _AddUser2State extends State<AddUser2> {
   final salaryController = TextEditingController();
   final monthoffController = TextEditingController();
   final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   List<BType> bTypeNames;
   BType businessType;
 
@@ -29,7 +29,7 @@ class _AddUser2State extends State<AddUser2> {
             color: Colors.blue,
           );
         });
-        
+
     var ref = Firestore.instance.collection("Users");
     await ref.document(mobileController.text).setData({
       "Name": nameController.text,
@@ -38,6 +38,7 @@ class _AddUser2State extends State<AddUser2> {
       "Monthoff": monthoffController.text,
       "Email": emailController.text,
       "Business Type": businessType.name,
+      "Password": passwordController.text
     });
 
     Navigator.of(context).pop();
@@ -94,7 +95,7 @@ class _AddUser2State extends State<AddUser2> {
                         style: TextStyle(
                           fontSize: 22,
                           color: Colors.black,
-                          fontFamily: "ComicNeue-Light",
+                          // fontFamily: "ComicNeue-Light",
                           fontWeight: FontWeight.w900,
                         ),
                         textAlign: TextAlign.center,
@@ -123,7 +124,7 @@ class _AddUser2State extends State<AddUser2> {
                         child: TextField(
                           style: TextStyle(
                               fontSize: 20,
-                              fontFamily: "ComicNeue-Light",
+                              // fontFamily: "ComicNeue-Light",
                               fontWeight: FontWeight.bold),
                           decoration: InputDecoration(
                             suffixIcon: Icon(
@@ -132,13 +133,13 @@ class _AddUser2State extends State<AddUser2> {
                               size: 25,
                             ),
 
-                            enabledBorder: OutlineInputBorder(
+                            enabledBorder: UnderlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(
                                   color: Colors.blueGrey,
                                   width: 2,
                                 )),
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: UnderlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(
                                   color: Colors.black,
@@ -148,7 +149,7 @@ class _AddUser2State extends State<AddUser2> {
                             // fillColor: Colors.amber,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             labelStyle: TextStyle(
-                              fontFamily: "ComicNeue-Light",
+                              // fontFamily: "ComicNeue-Light",
                               fontSize: 24,
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
@@ -169,17 +170,17 @@ class _AddUser2State extends State<AddUser2> {
                         child: TextField(
                           style: TextStyle(
                               fontSize: 20,
-                              fontFamily: "ComicNeue-Light",
+                              // fontFamily: "ComicNeue-Light",
                               fontWeight: FontWeight.bold),
                           decoration: InputDecoration(
                             suffixIcon: Icon(Icons.phone, color: Colors.black),
-                            enabledBorder: OutlineInputBorder(
+                            enabledBorder: UnderlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(
                                   color: Colors.blueGrey,
                                   width: 2,
                                 )),
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: UnderlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(
                                   color: Colors.black,
@@ -189,7 +190,7 @@ class _AddUser2State extends State<AddUser2> {
                             // fillColor: Colors.amber,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             labelStyle: TextStyle(
-                              fontFamily: "ComicNeue-Light",
+                              // fontFamily: "ComicNeue-Light",
                               fontSize: 24,
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
@@ -211,17 +212,17 @@ class _AddUser2State extends State<AddUser2> {
                         child: TextField(
                           style: TextStyle(
                               fontSize: 20,
-                              fontFamily: "ComicNeue-Light",
+                              // fontFamily: "ComicNeue-Light",
                               fontWeight: FontWeight.bold),
                           decoration: InputDecoration(
                             suffixIcon: Icon(Icons.email, color: Colors.black),
-                            enabledBorder: OutlineInputBorder(
+                            enabledBorder: UnderlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(
                                   color: Colors.blueGrey,
                                   width: 2,
                                 )),
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: UnderlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(
                                   color: Colors.black,
@@ -231,7 +232,7 @@ class _AddUser2State extends State<AddUser2> {
                             // fillColor: Colors.amber,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             labelStyle: TextStyle(
-                              fontFamily: "ComicNeue-Light",
+                              // fontFamily: "ComicNeue-Light",
                               fontSize: 24,
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
@@ -242,50 +243,102 @@ class _AddUser2State extends State<AddUser2> {
                           controller: emailController,
                         ),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          // border: Border.all(),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        margin: EdgeInsets.only(top: 20, left: 10, right: 10),
-                        padding: EdgeInsets.all(8),
-                        width: double.infinity,
-                        child: TextField(
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: "ComicNeue-Light",
-                              fontWeight: FontWeight.bold),
-                          decoration: InputDecoration(
-                            suffixIcon: Icon(
-                              Icons.monetization_on,
-                              color: Colors.black,
+
+                      Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              // border: Border.all(),
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                  color: Colors.blueGrey,
-                                  width: 2,
-                                )),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
+                            margin:
+                                EdgeInsets.only(top: 20, left: 10, right: 10),
+                            padding: EdgeInsets.all(8),
+                            width: MediaQuery.of(context).size.width / 2 - 20,
+                            child: TextField(
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  // fontFamily: "ComicNeue-Light",
+                                  fontWeight: FontWeight.bold),
+                              decoration: InputDecoration(
+                                suffixIcon: Icon(
+                                  Icons.monetization_on,
                                   color: Colors.black,
-                                  width: 2,
-                                )),
-                            // filled: true,
-                            // fillColor: Colors.amber,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                            labelStyle: TextStyle(
-                              fontFamily: "ComicNeue-Light",
-                              fontSize: 24,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.bold,
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.blueGrey,
+                                      width: 2,
+                                    )),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                      width: 2,
+                                    )),
+                                // filled: true,
+                                // fillColor: Colors.amber,
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.always,
+                                labelStyle: TextStyle(
+                                  // fontFamily: "ComicNeue-Light",
+                                  fontSize: 24,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                labelText: 'MTH OFF',
+                              ),
+                              keyboardType: TextInputType.number,
+                              controller: salaryController,
                             ),
-                            labelText: 'Monthly Salary',
                           ),
-                          keyboardType: TextInputType.number,
-                          controller: salaryController,
-                        ),
+                          Container(
+                            decoration: BoxDecoration(
+                              // border: Border.all(),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            margin:
+                                EdgeInsets.only(top: 20, left: 10, right: 10),
+                            padding: EdgeInsets.all(8),
+                            width: MediaQuery.of(context).size.width / 2 - 20,
+                            child: TextField(
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  // fontFamily: "ComicNeue-Light",
+                                  fontWeight: FontWeight.bold),
+                              decoration: InputDecoration(
+                                suffixIcon: Icon(
+                                  Icons.hotel,
+                                  color: Colors.black,
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.blueGrey,
+                                      width: 2,
+                                    )),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                      width: 2,
+                                    )),
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.always,
+                                labelStyle: TextStyle(
+                                  // fontFamily: "ComicNeue-Light",
+                                  fontSize: 24,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                labelText: 'SALARY',
+                              ),
+                              keyboardType: TextInputType.text,
+                              controller: monthoffController,
+                            ),
+                          ),
+                        ],
                       ),
                       Container(
                         decoration: BoxDecoration(
@@ -298,20 +351,17 @@ class _AddUser2State extends State<AddUser2> {
                         child: TextField(
                           style: TextStyle(
                               fontSize: 20,
-                              fontFamily: "ComicNeue-Light",
+                              // fontFamily: "ComicNeue-Light",
                               fontWeight: FontWeight.bold),
                           decoration: InputDecoration(
-                            suffixIcon: Icon(
-                              Icons.hotel,
-                              color: Colors.black,
-                            ),
-                            enabledBorder: OutlineInputBorder(
+                            suffixIcon: Icon(Icons.email, color: Colors.black),
+                            enabledBorder: UnderlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(
                                   color: Colors.blueGrey,
                                   width: 2,
                                 )),
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: UnderlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(
                                   color: Colors.black,
@@ -321,17 +371,18 @@ class _AddUser2State extends State<AddUser2> {
                             // fillColor: Colors.amber,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             labelStyle: TextStyle(
-                              fontFamily: "ComicNeue-Light",
+                              // fontFamily: "ComicNeue-Light",
                               fontSize: 24,
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
                             ),
-                            labelText: 'Monthly Off',
+                            labelText: 'Password',
                           ),
                           keyboardType: TextInputType.text,
-                          controller: monthoffController,
+                          controller: passwordController,
                         ),
                       ),
+
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(),
@@ -358,7 +409,7 @@ class _AddUser2State extends State<AddUser2> {
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 19,
-                                fontFamily: "ComicNeue-Light",
+                                // fontFamily: "ComicNeue-Light",
                                 color: Colors.grey),
                           ),
                           value: selectedUser,
@@ -413,8 +464,12 @@ class _AddUser2State extends State<AddUser2> {
                       ),
                       // Multi(bTypeList:bTypeNames),
                       Container(
-                        margin: EdgeInsets.only(bottom: 20),
-                        width: 100,
+                        margin: EdgeInsets.only(
+                          bottom: 20,
+                          right: 20,
+                          left: 20,
+                        ),
+                        width: double.infinity,
                         height: 40,
                         child: RaisedButton(
                           padding: EdgeInsets.all(6),
@@ -423,7 +478,7 @@ class _AddUser2State extends State<AddUser2> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                           child: Text(
-                            'ADD',
+                            'SAVE',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,

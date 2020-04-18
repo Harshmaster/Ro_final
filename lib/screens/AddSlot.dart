@@ -12,24 +12,24 @@ class _AddSlotState extends State<AddSlot> {
   final nameController = TextEditingController();
   String selectedToTime;
   String selectedFromTime;
-  DateTime _date = DateTime.now();
+  // DateTime _date = DateTime.now();
   TimeOfDay _time = TimeOfDay.now();
 
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: _date,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2021),
-    );
+  // Future<Null> _selectDate(BuildContext context) async {
+  //   final DateTime picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: _date,
+  //     firstDate: DateTime(2020),
+  //     lastDate: DateTime(2021),
+  //   );
 
-    if (picked != null && picked != _date) {
-      print('Date Selected: ${picked.toIso8601String()}');
-      setState(() {
-        _date = picked;
-      });
-    }
-  }
+  //   if (picked != null && picked != _date) {
+  //     print('Date Selected: ${picked.toIso8601String()}');
+  //     setState(() {
+  //       _date = picked;
+  //     });
+  //   }
+  // }
 
   Future<Null> _selectTime(BuildContext context) async {
     final TimeOfDay picked = await showTimePicker(

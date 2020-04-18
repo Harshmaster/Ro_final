@@ -13,6 +13,7 @@ class SubCategory extends StatefulWidget {
 }
 
 class _SubCategoryState extends State<SubCategory> {
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(
@@ -117,15 +118,17 @@ class _SubCategoryState extends State<SubCategory> {
                                     .delete();
                               }
                               print("ALL IS DONE NOW");
-                              showInSnackBar("$sub_cat_name DELETED");
+                              showInSnackBar("$sub_cat_name DELETED SUCCESSFULLY");
                             });
                           },
                         ),
                       ),
                     ],
                     child: Container(
+                      width: MediaQuery.of(context).size.width,
                       margin: EdgeInsets.only(bottom: 20),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Container(
                             width: 70,
@@ -141,17 +144,25 @@ class _SubCategoryState extends State<SubCategory> {
                           ),
                           SizedBox(
                             width: 20,
-                          ),
-                          Column(
-                            children: [
-                              Text(
-                                snapshot.data.documents[index]
-                                    .data["sub_category_name"],
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 23),
-                              ),
-                              CategoryChip(categories),
-                            ],
+                           ),
+                          Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  child: Text(
+                                    snapshot.data.documents[index]
+                                        .data["sub_category_name"],
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 23),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ),
+                                Container(
+                                  child: CategoryChip(categories),
+                                ),
+                              ],
+                            ),
                           )
                         ],
                       ),
@@ -197,8 +208,13 @@ class _CategoryChipState extends State<CategoryChip> {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      children: _buildChoiceList(),
+    return Container(
+      width: 250,
+      child: Wrap(
+        spacing: 4,
+        runSpacing: 0,
+        children: _buildChoiceList(),
+      ),
     );
   }
 }

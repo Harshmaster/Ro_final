@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:uuid/uuid.dart';
 import '../models/icon-model.dart';
-import './addBusinessType.dart';
 
 class AddBusinessTypes2 extends StatefulWidget {
   static const routeName = '/add-business-type-2';

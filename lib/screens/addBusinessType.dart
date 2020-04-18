@@ -13,9 +13,20 @@ class AddBusinessType extends StatefulWidget {
 }
 
 class _AddBusinessTypeState extends State<AddBusinessType> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: new Text(value),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         child: Icon(
@@ -67,29 +78,30 @@ class _AddBusinessTypeState extends State<AddBusinessType> {
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
                   return Slidable(
-                      actionPane: SlidableDrawerActionPane(),
-                            secondaryActions: <Widget>[
-                              Container(
-                                height: 110,
-                                width: 60,
-                                margin: EdgeInsets.only(
-                                  top: 12,
-                                ),
-                                child: IconSlideAction(
-                                  caption: "Delete",
-                                  color: Colors.black,
-                                  icon: Icons.delete,
-                                  onTap: () async {
-                                    Firestore.instance
-                                        .collection("Business Types")
-                                        .document(snapshot.data.documents[index]
-                                            .data["id"])
-                                        .delete();
-                                  },
-                                ),
-                              ),
-                            ],
-                    
+                    actionPane: SlidableDrawerActionPane(),
+                    secondaryActions: <Widget>[
+                      Container(
+                        height: 110,
+                        width: 60,
+                        margin: EdgeInsets.only(
+                          top: 12,
+                        ),
+                        child: IconSlideAction(
+                          caption: "Delete",
+                          color: Colors.black,
+                          icon: Icons.delete,
+                          onTap: () async {
+                            Firestore.instance
+                                .collection("Business Types")
+                                .document(
+                                    snapshot.data.documents[index].data["id"])
+                                .delete();
+                            showInSnackBar(
+                                "${snapshot.data.documents[index].data["BusinessType Name"]} DELETED SUCCESSFULLY ");
+                          },
+                        ),
+                      ),
+                    ],
                     child: Container(
                       margin: EdgeInsets.only(bottom: 20),
                       child: Row(
